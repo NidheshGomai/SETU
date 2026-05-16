@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+ENV/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Test and results
+test_results/
+*.json
+*.txt
+
+# Large model and checkpoint files
+*.pt
+*.pth
+*.onnx
+*.pb
+
+# OS files
+.DS_Store
+Thumbs.db
