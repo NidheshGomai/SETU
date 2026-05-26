@@ -17,7 +17,7 @@ app = Flask(__name__)
 # PyResearch Configuration Constants
 PR_MODEL_PATH = "yoloV8_best.pt"
 PR_DISPLAY_CONFIG = {
-    'window_title': "PyResearch - Pothole Computer Vision Project",
+    'window_title': "Pothole Computer Vision Project",
     'window_size': (1280, 720),
     'color_scheme': "PR_DARK_BLUE",
     'fps_display': True
@@ -27,7 +27,7 @@ PR_DISPLAY_CONFIG = {
 detection_count = 0
 
 class PyResearchVisualizer:
-    """PyResearch Standard Visualization Engine"""
+    """Standard Visualization Engine"""
     
     def __init__(self):
         self.model = YOLO(PR_MODEL_PATH)
@@ -43,7 +43,7 @@ class PyResearchVisualizer:
         )
         
     def process_frame(self, frame):
-        """PyResearch Standard Processing Pipeline"""
+        """tandard Processing Pipeline"""
         global detection_count
         results = self.model(frame)[0]
         detections = sv.Detections.from_ultralytics(results)
