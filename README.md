@@ -7,8 +7,10 @@ A computer vision project for pothole and road damage detection using YOLO and a
 This repository contains inference scripts, a live dashboard, evaluation utilities, and supporting files for a pothole detection pipeline.
 
 Key features:
-- `app.py`: Flask web app showing live video inference with detection count.
-- `templates/index.html`: Dashboard UI for video stream and statistics.
+- `dashboard.py`: New Flask dashboard for image/video upload prediction and accuracy metrics display.
+- `templates/dashboard.html`: Dashboard UI for live stream preview, image/video uploads, and model accuracy.
+- `app.py`: Existing Flask web app showing live video inference with detection count.
+- `templates/index.html`: Original dashboard UI for video stream and statistics.
 - `test.py` / `v8test.py`: YOLO model inference scripts for validation and testing.
 - `show_results.py`: Prints summary statistics from saved JSON test results.
 - `generate_full_gallery.py`: Builds an HTML gallery from visualization output images.
@@ -17,13 +19,15 @@ Key features:
 
 ## Repository Structure
 
-- `app.py` - Flask application for live video detection.
+- `dashboard.py` - New Flask app for image/video prediction plus accuracy metrics.
+- `app.py` - Existing Flask application for live video detection.
 - `server.js` - Simple Node.js Express server.
 - `test.py` - YOLO inference test runner.
 - `v8test.py` - Extended YOLOv8 evaluation script.
 - `show_results.py` - Summarizes existing test results.
 - `generate_full_gallery.py` - Creates HTML gallery from visualization outputs.
-- `templates/index.html` - Web dashboard template.
+- `templates/dashboard.html` - New web dashboard template for predictions and accuracy.
+- `templates/index.html` - Original dashboard template.
 - `POTHOLEL_OBJECT_DETECTION.ipynb` - Notebook for object detection exploration.
 - `pothole_detection_severity.ipynb` - Notebook for severity detection.
 - `*.pt`, `*.pth` - Model weight files.
@@ -55,10 +59,31 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Run the Flask dashboard
+### Run the new Flask dashboard
 
-1. Update the video file path inside `app.py` if needed. The current path is set to:
-   `E:\kjsce\Hackathons\Setu\cityRoad_potHoles-side.mp4`.
+1. Make sure your model file exists in the project root. The app checks for:
+   `yoloV8_best.pt`, `best.pt`, or `detection_model.pt`.
+2. Place an optional sample video at `sample_video.mp4` in the project root if you want the built-in live feed preview.
+3. Run the new dashboard app:
+
+```bash
+python dashboard.py
+```
+
+4. Open the dashboard in your browser:
+
+```text
+http://localhost:5000
+```
+
+5. Use the dashboard to:
+   - upload an image for pothole detection,
+   - upload a video for frame-based detection summary,
+   - view stored test accuracy statistics from `test_results/test_results.json`.
+
+### Run the existing Flask app
+
+1. Update the video file path inside `app.py` if needed.
 2. Run the app:
 
 ```bash
