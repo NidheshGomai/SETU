@@ -1,4 +1,4 @@
-# PyResearch Pothole Detection
+# Pothole Detection
 
 A computer vision project for pothole and road damage detection using YOLO and a Flask dashboard.
 
@@ -122,15 +122,3 @@ Then open:
 ```text
 http://localhost:3000
 ```
-
-## Notes
-
-- Model weight files such as `yoloV8_best.pt`, `best.pt`, `detection_model.pt`, and `severity_model.pth` are large and may not be suitable for pushing to GitHub.
-- Update hard-coded paths in the scripts to match your local file structure.
-- If you add dataset folders, keep them outside version control or use Git LFS for large files.
-
-## Suggested Improvements
-
-- Add a `data.yaml` dataset configuration file.
-- Convert absolute paths to relative paths.
-- Add a license file if you want to publish this project publicly.
