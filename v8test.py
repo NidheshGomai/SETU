@@ -32,7 +32,7 @@ torch.load = patched_torch_load
 from ultralytics import YOLO
 
 # Configuration
-MODEL_PATH = "yoloV8_best.pt"
+MODEL_PATH = "detection_model.pt"
 TEST_IMAGES_DIR = "test/images"
 TEST_LABELS_DIR = "test/labels"
 OUTPUT_DIR = "test_results"

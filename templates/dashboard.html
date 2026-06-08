@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setu Pothole Detection Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #eff2f8;
+            color: #222;
+        }
+        .header {
+            background-color: #0f4ad5;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 20px;
+            max-width: 1320px;
+            margin: 24px auto;
+            padding: 0 20px 40px;
+        }
+        .panel {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+        }
+        .panel h2 {
+            margin-top: 0;
+            color: #0f4ad5;
+        }
+        .video-box, .upload-box {
+            border: 1px solid #d8e2f0;
+            border-radius: 12px;
+            padding: 16px;
+            background: #f8fbff;
+        }
+        .video-box img,
+        .video-box video,
+        .preview-image {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 2px solid #0f4ad5;
+        }
+        .stats-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .stat-card {
+            background: #f4f7fd;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid #dbe6f6;
+        }
+        .stat-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #0f4ad5;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #0f4ad5;
+        }
+        .form-group input[type=file],
+        .form-group button {
+            width: 100%;
+        }
+        input[type=file] {
+            border: 1px solid #d8e2f0;
+            border-radius: 10px;
+            padding: 10px;
+            background: #fff;
+        }
+        button {
+            background-color: #0f4ad5;
+            border: none;
+            color: white;
+            padding: 12px 18px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        button:hover {
+            background-color: #083d9d;
+        }
+        .result-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .result-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #dbe6f6;
+            background: #f8fbff;
+        }
+        .footer {
+            text-align: center;
+            padding: 16px;
+            color: #556079;
+        }
+        .status {
+            margin-top: 12px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Setu Pothole Detection Dashboard</h1>
+        <p>View model accuracy and run pothole detection on images or uploaded video.</p>
+    </div>
+
+    <div class="layout">
+        <div class="panel">
+            <h2>Live Video Prediction</h2>
+
+            <div class="upload-box" style="margin-top: 24px;">
+                <h3>Predict on a single image</h3>
+                <form id="image-form">
+                    <div class="form-group">
+                        <label for="image-input">Upload image</label>
+                        <input id="image-input" type="file" name="image" accept="image/*" required>
+                    </div>
+                    <button type="submit">Run Image Prediction</button>
+                </form>
+
+                <div id="image-result" style="display:none; margin-top:20px;">
+                    <h4>Image Prediction Result</h4>
+                    <img id="image-preview" class="preview-image" alt="Predicted image preview">
+                    <ul id="image-detections" class="result-list"></ul>
+                </div>
+            </div>
+
+            <div class="upload-box" style="margin-top: 24px;">
+                <h3>Predict on a video upload</h3>
+                <form id="video-form">
+                    <div class="form-group">
+                        <label for="video-input">Upload video</label>
+                        <input id="video-input" type="file" name="video" accept="video/*" required>
+                    </div>
+                    <button type="submit">Run Video Prediction</button>
+                </form>
+
+                <div id="video-result" style="display:none; margin-top:20px;">
+                    <h4>Video Prediction Summary</h4>
+                    <img id="video-preview" class="preview-image" alt="Video prediction preview">
+                    <ul class="result-list" id="video-stats"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Model Accuracy Metrics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <strong>Total Test Images</strong>
+                    <span id="stat-total-images">-</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Total Ground Truth Objects</strong>
+                    <span id="stat-total-gt">-</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Total Predictions</strong>
+                    <span id="stat-total-predictions">-</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Detection Rate</strong>
+                    <span id="stat-detection-rate">-</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Frames or Images with Detections</strong>
+                    <span id="stat-images-with-detections">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>This dashboard uses the YOLO model in <code>dashboard.py</code>. Accuracy values are sourced from <code>test_results/test_results.json</code>.</p>
+    </div>
+
+    <script>
+        async function loadAccuracy() {
+            try {
+                const response = await fetch('/accuracy_data');
+                const data = await response.json();
+                if (!data.available) {
+                    document.getElementById('stat-total-images').textContent = data.message;
+                    document.getElementById('stat-total-gt').textContent = '-';
+                    document.getElementById('stat-total-predictions').textContent = '-';
+                    document.getElementById('stat-detection-rate').textContent = '-';
+                    document.getElementById('stat-images-with-detections').textContent = '-';
+                    document.getElementById('class-stats').innerHTML = '';
+                    return;
+                }
+
+                document.getElementById('stat-total-images').textContent = data.total_images;
+                document.getElementById('stat-total-gt').textContent = data.total_ground_truth;
+                document.getElementById('stat-total-predictions').textContent = data.total_predictions;
+                document.getElementById('stat-detection-rate').textContent = data.detection_rate + '%';
+                document.getElementById('stat-images-with-detections').textContent = data.images_with_detections;
+
+                const classStats = document.getElementById('class-stats');
+                classStats.innerHTML = '';
+                if (data.class_stats && Object.keys(data.class_stats).length > 0) {
+                    for (const key of Object.keys(data.class_stats)) {
+                        const stat = data.class_stats[key];
+                        const item = document.createElement('li');
+                        
+                    }
+                } else {
+                    classStats.innerHTML = '<li>No class-level data available</li>';
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        document.getElementById('image-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const input = document.getElementById('image-input');
+            if (!input.files.length) return;
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+            const response = await fetch('/predict_image', { method: 'POST', body: formData });
+            const result = await response.json();
+
+            if (!result.success) {
+                alert(result.message || 'Image prediction failed');
+                return;
+            }
+
+            document.getElementById('image-result').style.display = 'block';
+            document.getElementById('image-preview').src = result.preview;
+            const list = document.getElementById('image-detections');
+            list.innerHTML = '';
+            if (result.detections.length === 0) {
+                list.innerHTML = '<li>No potholes detected in the image.</li>';
+            } else {
+                result.detections.forEach((det, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Detection ${index + 1}: class=${det.class_id}, confidence=${det.confidence.toFixed(3)}`;
+                    list.appendChild(li);
+                });
+            }
+        });
+
+        document.getElementById('video-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const input = document.getElementById('video-input');
+            if (!input.files.length) return;
+
+            const formData = new FormData();
+            formData.append('video', input.files[0]);
+            const response = await fetch('/predict_video', { method: 'POST', body: formData });
+            const result = await response.json();
+
+            if (!result.success) {
+                alert(result.message || 'Video prediction failed');
+                return;
+            }
+
+            document.getElementById('video-result').style.display = 'block';
+            if (result.preview) {
+                document.getElementById('video-preview').src = result.preview;
+            }
+            const stats = document.getElementById('video-stats');
+            stats.innerHTML = '';
+            stats.innerHTML += `<li>Frames Processed: ${result.stats.frames_processed}</li>`;
+            stats.innerHTML += `<li>Total Detections: ${result.stats.total_detections}</li>`;
+            stats.innerHTML += `<li>Average Detections Per Frame: ${result.stats.average_detections}</li>`;
+        });
+
+        window.addEventListener('DOMContentLoaded', loadAccuracy);
+    </script>
+</body>
+</html>

@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Load the model
 print("Loading best.pt model...")
-model = YOLO("best.pt")
+model = YOLO("detection_model.pt")
 
 # Define paths
 test_images_dir = r"E:\kjsce\Hackathons\Setu\test\images"

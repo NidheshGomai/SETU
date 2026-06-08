@@ -15,7 +15,7 @@ torch.serialization.add_safe_globals([DetectionModel])
 app = Flask(__name__)
 
 # PyResearch Configuration Constants
-PR_MODEL_PATH = "yoloV8_best.pt"
+PR_MODEL_PATH = "detection_model.pt"
 PR_DISPLAY_CONFIG = {
     'window_title': "Pothole Computer Vision Project",
     'window_size': (1280, 720),
